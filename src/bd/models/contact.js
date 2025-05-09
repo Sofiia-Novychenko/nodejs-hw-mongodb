@@ -32,4 +32,4 @@ const contactSchema = new Schema(
   },
 );
 
-export const contactsCollection = model('contact', contactSchema);
+export const ContactModel = model('Contact', contactSchema); //collection neme: contacts
