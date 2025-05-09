@@ -2,7 +2,7 @@ import { ContactModel } from '../bd/models/contact.js';
 
 export const getAllContacts = async () => {
   const contacts = await ContactModel.find();
-  console.log('Fetched contacts:', contacts);
+
   return contacts;
 };
 

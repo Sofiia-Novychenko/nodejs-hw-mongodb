@@ -32,15 +32,11 @@ export const setupServer = () => {
   app.get('/contacts', async (req, resp) => {
     const contacts = await getAllContacts();
 
-    console.log('Recived contacts BEFOR JSON: ', contacts);
-
     resp.json({
       status: 200,
       message: 'Successfully found contacts!',
       data: contacts,
     });
-
-    console.log('Recived contacts AFTER JSON: ', contacts);
   });
 
   app.get('/contacts/:contactId', async (req, resp) => {
