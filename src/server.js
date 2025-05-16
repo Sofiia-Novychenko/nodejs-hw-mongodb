@@ -15,9 +15,6 @@ const PORT = parseInt(getEnvVar('PORT', '3000'));
 export const setupServer = () => {
   const app = express();
 
-  //* Вбудований у express middleware для обробки (парсингу) JSON-даних у запитах
-  //* наприклад, у запитах POST або PATCH
-  app.use(express.json());
   app.use(cors());
   app.use(
     pino({
