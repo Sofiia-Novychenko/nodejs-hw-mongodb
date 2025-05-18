@@ -21,12 +21,8 @@ export const createOneContact = async (payload) => {
 };
 
 export const patchOneContact = async (contactId, payload) => {
-  const contact = await ContactModel.findByIdAndUpdate(
-    { _id: contactId },
-    payload,
-    {
-      new: true,
-    },
-  );
+  const contact = await ContactModel.findByIdAndUpdate(contactId, payload, {
+    new: true,
+  });
   return contact;
 };
