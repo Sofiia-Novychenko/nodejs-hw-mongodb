@@ -1,8 +1,27 @@
 import { ContactModel } from '../bd/models/contact.js';
 
-export const getAllContacts = async () => {
-  const contact = await ContactModel.find();
-  return contact;
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
+  const skip = page > 0 ? (page - 1) * perPage : 0;
+
+  const [totalItems, data] = await Promise.all([
+    ContactModel.countDocuments(),
+    ContactModel.find()
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(perPage),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  return {
+    data,
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    hasNextPage: totalPages > page,
+    hasPreviousPage: page > 1,
+  };
 };
 
 export const getOneContact = async (contactId) => {

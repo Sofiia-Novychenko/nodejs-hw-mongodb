@@ -12,13 +12,13 @@ export const errorHandler = (err, req, resp, next) => {
     return;
   }
   // ловимо помилки типу CastError (наприклад, некоректний ObjectId)
-  if (err.name === 'CastError') {
-    resp.status(400).json({
-      status: 400,
-      message: 'Invalid ContactId format, a 24-character hex string needed',
-      data: err.message,
-    });
-  }
+  // if (err.name === 'CastError') {
+  //   resp.status(400).json({
+  //     status: 400,
+  //     message: 'Invalid ContactId format, a 24-character hex string needed',
+  //     data: err.message,
+  //   });
+  // }
 
   resp.status(500).json({
     status: 500,
