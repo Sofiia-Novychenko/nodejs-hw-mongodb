@@ -3,7 +3,7 @@ import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { getEnvVar } from './utils/getEnvVar.js';
-import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
@@ -28,7 +28,7 @@ export const setupServer = () => {
     resp.json({ message: 'Hi! Contact base is here:3' });
   });
 
-  app.use(contactsRouter);
+  app.use(router);
 
   //* найбільш універсальний спосіб обробити "все, що не співпало з маршрутами вище"
   // app.use('*', notFoundHandler);

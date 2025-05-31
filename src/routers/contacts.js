@@ -19,29 +19,25 @@ const router = Router();
 //* наприклад, у запитах POST або PATCH
 const jsonParser = express.json();
 
-router.get('/contacts', ctrlWrapper(getAllContactsController));
+router.get('/', ctrlWrapper(getAllContactsController));
 
-router.get(
-  '/contacts/:contactId',
-  IsValidID,
-  ctrlWrapper(getOneContactController),
-);
+router.get('/:contactId', IsValidID, ctrlWrapper(getOneContactController));
 
 router.delete(
-  '/contacts/:contactId',
+  '/:contactId',
   IsValidID,
   ctrlWrapper(deleteOneContactController),
 );
 
 router.post(
-  '/contacts',
+  '/',
   jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createOneContactController),
 );
 
 router.patch(
-  '/contacts/:contactId',
+  '/:contactId',
   IsValidID,
   jsonParser,
   validateBody(patchedContactSchema),
