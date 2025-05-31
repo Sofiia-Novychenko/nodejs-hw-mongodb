@@ -5,7 +5,7 @@ export const validateBody = (schema) => async (req, resp, next) => {
     await schema.validateAsync(req.body, { abortEarly: false });
     next();
   } catch (err) {
-    const error = createHttpError(400, 'Bad request', { errors: err.details });
-    next(error);
+    const errors = err.details.map((detail) => detail.message);
+    next(createHttpError.BadRequest(errors));
   }
 };
