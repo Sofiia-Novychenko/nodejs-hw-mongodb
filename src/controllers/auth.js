@@ -48,7 +48,6 @@ export const logoutUserController = async (req, resp) => {
   if (req.cookies.sessionId) {
     await logoutUser(req.cookies.sessionId);
   }
-  console.log('SessionId is: ', req.cookies.sessionId);
 
   resp.clearCookie('sessionId');
   resp.clearCookie('refreshToken');
@@ -62,7 +61,7 @@ const setupSession = (resp, session) => {
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 
-  resp.cookie('sessionId', session.sessionId, {
+  resp.cookie('sessionId', session._id, {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });

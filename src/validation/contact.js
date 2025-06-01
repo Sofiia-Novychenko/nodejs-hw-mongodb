@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { isValidObjectId } from 'mongoose';
 
 //* 'string.pattern.base' - для перевірки випадків невідповідності патерну.
 //* .trim() - автоматичне прибирання пробіли з початку і кінця, щоб уникнути некоректного введення.
@@ -38,6 +39,12 @@ export const createContactSchema = Joi.object({
       'any.required': 'Contact type is required',
       'any.only': 'Contact type should be one of: work, home or personal',
     }),
+  userId: Joi.string().custom((value, helper) => {
+    if (value && !isValidObjectId(value)) {
+      return helper.message('Parent id should be a valid mongo id');
+    }
+    return true;
+  }),
 });
 
 export const patchedContactSchema = Joi.object({

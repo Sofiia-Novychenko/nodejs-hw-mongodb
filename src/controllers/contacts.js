@@ -21,6 +21,7 @@ export const getAllContactsController = async (req, resp) => {
     sortBy,
     sortOrder,
     filter,
+    userId: req.user._id,
   });
 
   resp.json({
@@ -32,11 +33,12 @@ export const getAllContactsController = async (req, resp) => {
 
 export const getOneContactController = async (req, resp) => {
   const { contactId } = req.params;
-  const contact = await getOneContact(contactId.trim());
+  const contact = await getOneContact({ contactId, userId: req.user._id });
 
   if (contact === null) {
     throw createHttpError(404, 'Contact not found');
   }
+
   resp.json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -46,7 +48,10 @@ export const getOneContactController = async (req, resp) => {
 
 export const deleteOneContactController = async (req, resp) => {
   const { contactId } = req.params;
-  const deletedContact = await deleteOneContact(contactId.trim());
+  const deletedContact = await deleteOneContact({
+    contactId,
+    userId: req.user._id,
+  });
 
   if (deletedContact === null) {
     throw createHttpError(404, 'Contact not found');
@@ -57,8 +62,11 @@ export const deleteOneContactController = async (req, resp) => {
 };
 
 export const createOneContactController = async (req, resp) => {
-  //* пейлоадом є тіло запиту
-  const createdContact = await createOneContact(req.body);
+  //* пейлоадом є тіло запиту, в нього ж записуємо userId
+  const createdContact = await createOneContact({
+    ...req.body,
+    userId: req.user._id,
+  });
 
   resp.status(201).json({
     status: 201,
@@ -69,7 +77,11 @@ export const createOneContactController = async (req, resp) => {
 
 export const patchOneContactController = async (req, resp) => {
   const { contactId } = req.params;
-  const patchedContact = await patchOneContact(contactId, req.body);
+  const patchedContact = await patchOneContact({
+    contactId,
+    ...req.body,
+    userId: req.user._id,
+  });
 
   if (patchedContact === null) {
     throw createHttpError(404, 'Contact not found');
