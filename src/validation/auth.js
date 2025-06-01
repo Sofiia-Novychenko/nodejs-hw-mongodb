@@ -16,3 +16,14 @@ export const registerUserSchema = Joi.object({
     'any.required': 'Password is required',
   }),
 });
+
+export const loginUserSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+    })
+    .messages({ 'string.email': 'Invalid email format' }),
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required',
+  }),
+});

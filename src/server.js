@@ -6,6 +6,7 @@ import { getEnvVar } from './utils/getEnvVar.js';
 import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -15,7 +16,12 @@ const PORT = parseInt(getEnvVar('PORT', '3000'));
 export const setupServer = () => {
   const app = express();
 
+  //CORS (Cross-Origin Resource Sharing) - це інструмент безпеки для веб-додатків,
+  //який дозволяє обмінюватися інформацією між веб-ресурсами з різних доменів.
   app.use(cors());
+  //Для роботи із кукі (як міделвара)
+  app.use(cookieParser());
+  // Логування запитів
   app.use(
     pino({
       transport: {
