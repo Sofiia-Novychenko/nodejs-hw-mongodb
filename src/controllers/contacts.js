@@ -48,10 +48,9 @@ export const getOneContactController = async (req, resp) => {
 
 export const deleteOneContactController = async (req, resp) => {
   const { contactId } = req.params;
-  const deletedContact = await deleteOneContact({
-    contactId,
-    userId: req.user._id,
-  });
+
+  //! треба передати два ОКРЕМІ аргументи, а не ОбʼЄКТ
+  const deletedContact = await deleteOneContact(contactId, req.user._id);
 
   if (deletedContact === null) {
     throw createHttpError(404, 'Contact not found');
@@ -77,11 +76,13 @@ export const createOneContactController = async (req, resp) => {
 
 export const patchOneContactController = async (req, resp) => {
   const { contactId } = req.params;
-  const patchedContact = await patchOneContact({
+
+  //! треба передати три ОКРЕМІ аргументи, а не ОбʼЄКТ
+  const patchedContact = await patchOneContact(
     contactId,
-    ...req.body,
-    userId: req.user._id,
-  });
+    req.body,
+    req.user._id,
+  );
 
   if (patchedContact === null) {
     throw createHttpError(404, 'Contact not found');
