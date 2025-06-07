@@ -59,10 +59,16 @@ export const createOneContact = async (payload) => {
   return contact;
 };
 
-export const patchOneContact = async (contactId, payload, userId) => {
+export const patchOneContact = async (contactId, payload, userId, photo) => {
+  const updatedData = { ...payload };
+
+  if (photo) {
+    updatedData.photo = photo;
+  }
+
   const contact = await ContactModel.findOneAndUpdate(
     { _id: contactId, userId },
-    payload,
+    updatedData,
     {
       new: true,
     },

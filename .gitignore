@@ -8,3 +8,5 @@
 
 /src/tmp/*
 !/src/tmp/.gitkeep
+/src/uploads/photos/*
+!src/uploads/photos/.gitkeep

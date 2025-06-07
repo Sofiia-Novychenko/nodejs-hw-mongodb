@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import {
   getAllContacts,
   getOneContact,
@@ -9,6 +11,7 @@ import createHttpError from 'http-errors';
 import { parsPaginationParams } from '../utils/parsPaginationParams.js';
 import { parsSortParams } from '../utils/parsSortParams.js';
 import { parsFiltersParams } from '../utils/parsFiltersParams.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContactsController = async (req, resp) => {
   const { page, perPage } = parsPaginationParams(req.query);
@@ -61,10 +64,18 @@ export const deleteOneContactController = async (req, resp) => {
 };
 
 export const createOneContactController = async (req, resp) => {
-  //* пейлоадом є тіло запиту, в нього ж записуємо userId
+  // await fs.rename(
+  //   req.file.path,
+  //   path.resolve('src', 'uploads', 'photos', req.file.filename),
+  // );
+
+  saveFileToCloudinary(req.file.path);
+
+  //* пейлоадом є тіло запиту, в нього ж записуємо userId і filename фото
   const createdContact = await createOneContact({
     ...req.body,
     userId: req.user._id,
+    photo: req.file.filename,
   });
 
   resp.status(201).json({
@@ -75,13 +86,18 @@ export const createOneContactController = async (req, resp) => {
 };
 
 export const patchOneContactController = async (req, resp) => {
+  await fs.rename(
+    req.file.path,
+    path.resolve('src', 'uploads', 'photos', req.file.filename),
+  );
   const { contactId } = req.params;
 
-  //! треба передати три ОКРЕМІ аргументи, а не ОбʼЄКТ
+  //! треба передати чотири ОКРЕМІ аргументи, а не ОбʼЄКТ
   const patchedContact = await patchOneContact(
     contactId,
     req.body,
     req.user._id,
+    req.file.filename,
   );
 
   if (patchedContact === null) {

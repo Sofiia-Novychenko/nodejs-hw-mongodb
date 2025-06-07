@@ -7,6 +7,7 @@ import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import path from 'node:path';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ export const setupServer = () => {
     resp.json({ message: 'Hi! Contact base is here:3' });
   });
 
+  app.use('/photos', express.static(path.resolve('src', 'uploads', 'photos')));
   app.use(router);
 
   //* найбільш універсальний спосіб обробити "все, що не співпало з маршрутами вище"

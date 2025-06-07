@@ -40,6 +40,7 @@ router.post(
 router.patch(
   '/:contactId',
   IsValidID,
+  upload.single('photo'),
   jsonParser,
   validateBody(patchedContactSchema),
   ctrlWrapper(patchOneContactController),
