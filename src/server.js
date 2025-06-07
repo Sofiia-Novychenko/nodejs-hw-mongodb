@@ -1,15 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { getEnvVar } from './utils/getEnvVar.js';
 import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
-
-dotenv.config();
 
 //* parseInt() parses up to the first non-digit and returns whatever it had parsed. Better than Number()
 const PORT = parseInt(getEnvVar('PORT', '3000'));

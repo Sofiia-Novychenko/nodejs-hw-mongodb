@@ -11,6 +11,7 @@ import createHttpError from 'http-errors';
 import { parsPaginationParams } from '../utils/parsPaginationParams.js';
 import { parsSortParams } from '../utils/parsSortParams.js';
 import { parsFiltersParams } from '../utils/parsFiltersParams.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContactsController = async (req, resp) => {
@@ -64,18 +65,29 @@ export const deleteOneContactController = async (req, resp) => {
 };
 
 export const createOneContactController = async (req, resp) => {
-  // await fs.rename(
-  //   req.file.path,
-  //   path.resolve('src', 'uploads', 'photos', req.file.filename),
-  // );
+  let photo = null;
 
-  saveFileToCloudinary(req.file.path);
+  //! наш feature flag
+  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+    const result = await saveFileToCloudinary(req.file.path);
+    await fs.unlink(req.file.path);
+    photo = result.secure_url;
+  } else {
+    await fs.rename(
+      req.file.path,
+      path.resolve('src', 'uploads', 'photos', req.file.filename),
+    );
+
+    photo = `http://localhost:${getEnvVar('PORT')}/avatars/${
+      req.file.filename
+    }`;
+  }
 
   //* пейлоадом є тіло запиту, в нього ж записуємо userId і filename фото
   const createdContact = await createOneContact({
     ...req.body,
     userId: req.user._id,
-    photo: req.file.filename,
+    photo,
   });
 
   resp.status(201).json({
