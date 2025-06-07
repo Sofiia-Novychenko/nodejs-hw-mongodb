@@ -36,7 +36,7 @@ export const authenticate = async (req, resp, next) => {
   }
 
   //! функція додає об'єкт користувача до запиту
-  req.user = { _id: user._id, name: user.name };
+  req.user = { _id: user._id, name: user.name, email: user.email };
 
   next();
 };
