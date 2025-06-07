@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -32,6 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "5.5",
     "mongoose": "^8.14.1",
+    "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
     "pino-http": "^10.4.0"
   }

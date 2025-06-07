@@ -28,10 +28,15 @@ export const loginUserSchema = Joi.object({
   }),
 });
 
-export const requestResetEmailSchema = Joi.object({
+export const sendResetEmailSchema = Joi.object({
   email: Joi.string()
     .email({
       minDomainSegments: 2,
     })
     .required(),
+});
+
+export const resetPasswordSchema = Joi.object({
+  password: Joi.string().required(),
+  token: Joi.string().required(),
 });

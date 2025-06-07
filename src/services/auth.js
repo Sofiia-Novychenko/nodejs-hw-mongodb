@@ -15,13 +15,6 @@ import handlebars from 'handlebars';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
 
-// //! синхронно зчитуємо файл
-// const RESET_PASSWORD_TEMPLATE = fs.readFileSync(
-//   path.resolve('templates', 'reset-password-email.hbs', 'utf-8'),
-// );
-
-// console.log('RESET_PASSWORD_TEMPLATE is :', RESET_PASSWORD_TEMPLATE);
-
 export const registerUser = async (payload) => {
   const user = await User.findOne({ email: payload.email });
 
@@ -108,45 +101,73 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   });
 };
 
-export const requestResetToken = async (email) => {
+export const sendResetToken = async (email) => {
   const user = await User.findOne({ email: email });
-
-  console.log('Email in services:', email);
-  console.log('User in services: ', user);
 
   if (user === null) {
     throw createHttpError(404, 'User not found');
   }
 
-  //! створюємо токенскидання пароля
+  //! створюємо токен скидання пароля
   const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
     },
     getEnvVar('JWT_SECRET'),
-    { expiresIn: '15m' },
+    { expiresIn: '5m' },
   );
 
   const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
     'reset-password-email.hbs',
   );
-  const templateSource = await fs
-    .readFile(resetPasswordTemplatePath)
-    .toString();
+  const buffer = await fs.readFile(resetPasswordTemplatePath);
+  const templateSource = buffer.toString();
 
   const template = handlebars.compile(templateSource);
+
   const html = template({
     name: user.name,
     link: `${getEnvVar('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
 
   //! надсилаєм лист користувачу з посиланням на скид пароля і створеним токеном
-  await sendEmail({
+  const mailResult = await sendEmail({
     from: getEnvVar('SMTP_FROM'),
     to: email,
     subject: 'Reset your password',
     html,
   });
+
+  if (!mailResult.accepted || mailResult.accepted.length === 0) {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+
+export const resetPassword = async (payload) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
+  } catch (error) {
+    if (error instanceof Error) throw createHttpError(401, error.message);
+    throw error;
+  }
+
+  const user = await User.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (user === null) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+  await User.updateOne({ _id: user._id }, { password: encryptedPassword });
 };
