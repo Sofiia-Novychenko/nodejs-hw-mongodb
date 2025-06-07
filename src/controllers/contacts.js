@@ -66,21 +66,22 @@ export const deleteOneContactController = async (req, resp) => {
 
 export const createOneContactController = async (req, resp) => {
   let photo = null;
-
   //! наш feature flag
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await saveFileToCloudinary(req.file.path);
-    await fs.unlink(req.file.path);
-    photo = result.secure_url;
-  } else {
-    await fs.rename(
-      req.file.path,
-      path.resolve('src', 'uploads', 'photos', req.file.filename),
-    );
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await saveFileToCloudinary(req.file.path);
+      await fs.unlink(req.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', 'photos', req.file.filename),
+      );
 
-    photo = `http://localhost:${getEnvVar('PORT')}/avatars/${
-      req.file.filename
-    }`;
+      photo = `http://localhost:${getEnvVar('PORT')}/avatars/${
+        req.file.filename
+      }`;
+    }
   }
 
   //* пейлоадом є тіло запиту, в нього ж записуємо userId і filename фото
@@ -98,10 +99,26 @@ export const createOneContactController = async (req, resp) => {
 };
 
 export const patchOneContactController = async (req, resp) => {
-  await fs.rename(
-    req.file.path,
-    path.resolve('src', 'uploads', 'photos', req.file.filename),
-  );
+  let photo = null;
+
+  //! наш feature flag і перевірка чи передається взагалі фото
+  if (req.file) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await saveFileToCloudinary(req.file.path);
+      await fs.unlink(req.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'uploads', 'photos', req.file.filename),
+      );
+
+      photo = `http://localhost:${getEnvVar('PORT')}/avatars/${
+        req.file.filename
+      }`;
+    }
+  }
+
   const { contactId } = req.params;
 
   //! треба передати чотири ОКРЕМІ аргументи, а не ОбʼЄКТ
@@ -109,7 +126,7 @@ export const patchOneContactController = async (req, resp) => {
     contactId,
     req.body,
     req.user._id,
-    req.file.filename,
+    photo,
   );
 
   if (patchedContact === null) {
