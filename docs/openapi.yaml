@@ -9,13 +9,21 @@ info:
 tags:
   - name: Contacts
     description: Operations about contacts.
-  - name: Auth
-    description: Auth operations.
 servers:
-  - url: http://localhost:3000
-  - url: #посилання на задеплоєний сайт
+  - url: https://contacts-app-swagger-hgem.onrender.com
 paths:
-  # тут будуть посилання на ендпоінти
+  /contacts:
+    get:
+      $ref: '../swagger/paths/students/get.yaml'
+    post:
+      $ref: '../swagger/paths/students/post.yaml'
+  /contacts/{id}:
+    get:
+      $ref: '../swagger/paths/students/{id}/get.yaml'
+    delete:
+      $ref: '../swagger/paths/students/{id}/delete.yaml'
+    patch:
+      $ref: '../swagger/paths/students/{id}/patch.yaml'
 components:
   securitySchemes:
     bearerAuth:

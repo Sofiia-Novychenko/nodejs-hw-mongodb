@@ -8,6 +8,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 //* parseInt() parses up to the first non-digit and returns whatever it had parsed. Better than Number()
 const PORT = parseInt(getEnvVar('PORT', '3000'));
@@ -34,6 +35,7 @@ export const setupServer = () => {
   });
 
   app.use('/photos', express.static(path.resolve('src', 'uploads', 'photos')));
+  app.use('/api-docs', swaggerDocs());
   app.use(router);
 
   //* найбільш універсальний спосіб обробити "все, що не співпало з маршрутами вище"
