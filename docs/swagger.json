@@ -180,7 +180,7 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data:": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "required": [
@@ -189,11 +189,6 @@
                   "contactType"
                 ],
                 "properties": {
-                  "_id": {
-                    "description": "Contact's id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "name": {
                     "description": "Contact's name",
                     "type": "string",
@@ -201,8 +196,8 @@
                   },
                   "phoneNumber": {
                     "description": "Contact's phone number",
-                    "type": "number",
-                    "example": 380000000001
+                    "type": "string",
+                    "example": "+380000000001"
                   },
                   "email": {
                     "description": "Contact's email",
@@ -219,11 +214,6 @@
                     ],
                     "example": "personal"
                   },
-                  "userId": {
-                    "description": "Contact's userId.",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "isFavourite": {
                     "description": "Shows if contact is maked as favourite.",
                     "type": "boolean",
@@ -232,17 +222,8 @@
                   "photo": {
                     "description": "Link to Contact's photo",
                     "type": "string",
+                    "format": "binary",
                     "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
-                  },
-                  "createdAt": {
-                    "description": "Shows when was contact created at.",
-                    "type": "string",
-                    "example": "2025-06-07T21:15:54.020Z"
-                  },
-                  "updatedAt": {
-                    "description": "Shows when was contact updated at.",
-                    "type": "string",
-                    "example": "2025-06-07T21:15:54.020Z"
                   }
                 }
               }
@@ -429,7 +410,7 @@
                   },
                   "phoneNumber": {
                     "description": "Contact's phone number",
-                    "type": "number"
+                    "type": "string"
                   },
                   "email": {
                     "description": "Contact's email",
@@ -530,12 +511,13 @@
           },
           "phoneNumber": {
             "description": "Contact's phone number",
-            "type": "number",
-            "example": 380000000001
+            "type": "string",
+            "example": "+380000000001"
           },
           "email": {
             "description": "Contact's email",
             "type": "string",
+            "format": "email",
             "example": "john@example.com"
           },
           "contactType": {
@@ -565,11 +547,13 @@
           "createdAt": {
             "description": "Shows when was contact created at.",
             "type": "string",
+            "format": "date-time",
             "example": "2025-06-07T21:15:54.020Z"
           },
           "updatedAt": {
             "description": "Shows when was contact updated at.",
             "type": "string",
+            "format": "date-time",
             "example": "2025-06-07T21:15:54.020Z"
           }
         }

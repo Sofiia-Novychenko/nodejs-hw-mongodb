@@ -17,11 +17,12 @@ properties:
     example: 'John Doe'
   phoneNumber:
     description: "Contact's phone number"
-    type: number
-    example: +380000000001
+    type: string
+    example: '+380000000001'
   email:
     description: "Contact's email"
     type: string
+    format: email
     example: 'john@example.com'
   contactType:
     description: "Contact's type."
@@ -42,8 +43,10 @@ properties:
   createdAt:
     description: 'Shows when was contact created at.'
     type: string
+    format: date-time
     example: '2025-06-07T21:15:54.020Z'
   updatedAt:
     description: 'Shows when was contact updated at.'
     type: string
+    format: date-time
     example: '2025-06-07T21:15:54.020Z'

@@ -23,7 +23,7 @@ requestBody:
             type: string
           phoneNumber:
             description: "Contact's phone number"
-            type: number
+            type: string
           email:
             description: "Contact's email"
             type: string
